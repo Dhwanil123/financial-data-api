@@ -114,7 +114,7 @@ app.post('/api/financial-data', async (req, res) => {
     res.json({
       entityId,
       financialYear,
-      data: mappedExcelData
+      financial_summary_data: mappedExcelData
     });
     
   } catch (error) {
