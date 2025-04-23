@@ -93,6 +93,20 @@ app.post('/api/financial-data', async (req, res) => {
     const sheetsToRead = ['BALANCE SHEET', 'CASH FLOW STATEMENT', 'PROFIT AND LOSS', 'financialSummary'];
     const excelData = readExcelSheets(filePath, sheetsToRead);
     
+
+    const sheetNameMapping = {
+        'BALANCE SHEET': 'balanceSheet',
+        'CASH FLOW STATEMENT': 'cashFlowStatement',
+        'PROFIT AND LOSS': 'profitAndLoss',
+        'financialSummary': 'financialSummary'
+      };
+  
+      const mappedExcelData = {};
+      for (const originalName in excelData) {
+        const mappedKey = sheetNameMapping[originalName] || originalName;
+        mappedExcelData[mappedKey] = excelData[originalName];
+      }
+
     // Clean up - remove the downloaded file
     fs.unlinkSync(filePath);
     
@@ -100,7 +114,7 @@ app.post('/api/financial-data', async (req, res) => {
     res.json({
       entityId,
       financialYear,
-      data: excelData
+      data: mappedExcelData
     });
     
   } catch (error) {
